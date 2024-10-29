@@ -149,20 +149,20 @@ const UpdatePendingBookings = async (req, res, next) => {
   const { bookingId, newStatus } = req.body;
 
   try {
-    if (!["confirmed", "canceled"].includes(newStatus)) {
+    // Validate the newStatus
+    if (!["confirmed", "canceled", "pending"].includes(newStatus)) {
       return res.status(400).json({ message: "Invalid status update." });
     }
 
+    // Find the booking by bookingId and update it
     const updatedBooking = await ArenaBookings.findOneAndUpdate(
-      { _id: bookingId, status: "confirmed" },
-      { status: newStatus },
-      { new: true }
+      { bookingId: bookingId }, // Search by bookingId
+      { status: newStatus }, // Update status
+      { new: true } // Return the updated document
     );
 
     if (!updatedBooking) {
-      return res
-        .status(404)
-        .json({ message: "Booking not found or not pending." });
+      return res.status(404).json({ message: "Booking not found." });
     }
 
     return res.status(200).json(updatedBooking);
