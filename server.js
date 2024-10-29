@@ -3,11 +3,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const { registerUser, loginUser  } = require("./controllers/userController");
+const { registerUser, loginUser } = require("./controllers/userController");
 const bookingRoutes = require("./routes/bookingRoutes");
-const profileRoutes = require('./routes/profileRoutes');
+const profileRoutes = require("./routes/profileRoutes");
 //const weatherRoutes = require("./routes/weatherRoutes");
-const staffRoutes = require('./routes/staffRoutes');
+const staffRoutes = require("./routes/staffRoutes");
+const arenaRoutes = require("./routes/arenaRoutes");
+const arenaB = require("./routes/arenaBookRoute");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -20,7 +22,6 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-
 
 // MongoDB connection
 mongoose.connect(MONGO_URI, {
@@ -39,12 +40,13 @@ db.once("open", () => {
 // Routes
 app.post("/register", registerUser);
 app.post("/login", loginUser);
-app.use('/api/booking', bookingRoutes);
-app.use('/api/profile', profileRoutes);
-app.use('/api/staff', staffRoutes);
+app.use("/api/booking", bookingRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/staff", staffRoutes);
+app.use("/api/arena", arenaRoutes);
+app.use("/api/arenaBookings", arenaB);
 
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
